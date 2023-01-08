@@ -10,14 +10,6 @@ with image1:
 with image2:
    image2 = Image.open('1124_s.jpg')
 
-def get_concat_h(im1, im2):
-    dst = Image.new('RGB', (im1.width + im2.width, im1.height))
-    dst.paste(im1, (0, 0))
-    dst.paste(im2, (im1.width, 0))
-    return dst
-
-get_concat_h(image1, image2)
-
 sl = st.slider('θ値', min_value=1,max_value=45)
 
 if sl:
@@ -63,21 +55,17 @@ if sl:
         size=(width,height),
         method=Image.QUAD,
         data=tarl,
-        resample=Image.BICUBIC,
+        resample=Image.BICUBIC
     )
 
     im2 = image2.transform(
         size=(width,height),
         method=Image.QUAD,
         data=tarr,
-        resample=Image.BICUBIC,
-        #fill=1,
-        #fillcolor=None
+        resample=Image.BICUBIC
     )
 
-    image1,image2 = st.columns(2)
-    with image1:
-        image1 = st.image(im1)
-    
-    with image2:
-        image2 = st.image(im2)
+    dst = Image.new(mode='RGB', size=(im1.width + im2.width, max(im1.height, im2.height)))
+    dst.paste(im1, box=(0, 0))
+    dst.paste(im2, box=(im1.width, 0))
+    st.image(dst)
